@@ -1,0 +1,73 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SpriteSplicer.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="260" d:DesignHeight="350"
+        x:Class="SpriteSplicer.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="SpriteSplicer"
+        Width="260"
+        Height="350">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    <Grid ColumnDefinitions="*" RowDefinitions="20,276,*" Background="PowderBlue">
+        <TextBlock Grid.ColumnSpan="4" Name="Title" Text="Pokemon Sprite Splitter" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
+        <Grid Name="BWGrid" Grid.Row="1" ColumnDefinitions="96,90,74" RowDefinitions="138,138,*" Background="DarkSlateGray">
+            <Image Grid.Column="0" Grid.Row="0" Margin="5" RenderOptions.BitmapInterpolationMode="None" Width="86" Height="128" Source="../Assets/BWUnsplit.png"/>
+            <Image Grid.Column="1" Grid.Row="0" Margin="5" RenderOptions.BitmapInterpolationMode="None" Width="80" Height="80" Source="../Assets/BWSplit1.png"/>
+            <Image Grid.Column="2" Grid.Row="0" Margin="5" RenderOptions.BitmapInterpolationMode="None" Width="64" Height="100" Source="../Assets/BWSplit2.png"/>
+            <Image Name="BWIn" Grid.Column="0" Margin="5" Grid.Row="1" RenderOptions.BitmapInterpolationMode="None" Width="86" Height="128" ZIndex="2"/>
+            <Image Name="BWOut1" Grid.Column="1" Margin="5" Grid.Row="1" RenderOptions.BitmapInterpolationMode="None" Width="80" Height="80" ZIndex="2">
+                <Image.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Save" Click="BWSave1"/>
+                    </ContextMenu>
+                </Image.ContextMenu>
+            </Image>
+            <Image Name="BWOut2" Grid.Column="2" Margin="5" Grid.Row="1" RenderOptions.BitmapInterpolationMode="None" Width="64" Height="100" ZIndex="2">
+                <Image.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Save" Click="BWSave2"/>
+                    </ContextMenu>
+                </Image.ContextMenu>
+            </Image>
+            <Rectangle Grid.Column="0" Grid.Row="1" Margin="5" Width="86" Height="128" Fill="BlanchedAlmond"></Rectangle>
+            <Rectangle Grid.Column="1" Grid.Row="1" Margin="5" Width="80" Height="80" Fill="BlanchedAlmond"></Rectangle>
+            <Rectangle Grid.Column="2" Grid.Row="1" Margin="5" Width="64" Height="100" Fill="BlanchedAlmond"></Rectangle>
+        </Grid>
+        <Grid Name="PtGrid" Grid.Row="1" ColumnDefinitions="96,90,74" RowDefinitions="138,138,*" Background="DarkGoldenrod" IsVisible="False">
+            <Image Grid.Column="0" Grid.Row="0" Margin="5" RenderOptions.BitmapInterpolationMode="None" Width="80" Height="80" Source="../Assets/PtUnsplit.png"/>
+            <Image Grid.Column="1" Grid.Row="0" Margin="5" RenderOptions.BitmapInterpolationMode="None" Width="80" Height="80" Source="../Assets/PtSplit1.png"/>
+            <Image Grid.Column="2" Grid.Row="0" Margin="5" RenderOptions.BitmapInterpolationMode="None" Width="64" Height="100" Source="../Assets/PtSplit2.png"/>
+            <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Text="Caitlin and Darach's sprites will not be&#xA;split. This is due to palette oddities." Margin="5,-20,5,5" Foreground="DarkRed" ZIndex="3"/>
+            <Image Name="PtIn" Grid.Column="0" Margin="5" Grid.Row="1" RenderOptions.BitmapInterpolationMode="None" Width="80" Height="80" ZIndex="2"/>
+            <Image Name="PtOut1" Grid.Column="1" Margin="5" Grid.Row="1" RenderOptions.BitmapInterpolationMode="None" Width="80" Height="80" ZIndex="2">
+                <Image.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Save" Click="PtSave1"/>
+                    </ContextMenu>
+                </Image.ContextMenu>
+            </Image>
+            <Image Name="PtOut2" Grid.Column="2" Margin="5" Grid.Row="1" RenderOptions.BitmapInterpolationMode="None" Width="64" Height="100" ZIndex="2">
+                <Image.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Save" Click="PtSave2"/>
+                    </ContextMenu>
+                </Image.ContextMenu>
+            </Image>
+            <Rectangle Grid.Column="0" Grid.Row="1" Margin="5" Width="80" Height="80" Fill="BlanchedAlmond"></Rectangle>
+            <Rectangle Grid.Column="1" Grid.Row="1" Margin="5" Width="80" Height="80" Fill="BlanchedAlmond"></Rectangle>
+            <Rectangle Grid.Column="2" Grid.Row="1" Margin="5" Width="64" Height="100" Fill="BlanchedAlmond"></Rectangle>
+        </Grid>
+        <Button Grid.Row="3" Grid.ColumnSpan="4" Margin="5" Click="Import_OnClick" Foreground="Black">Import</Button>
+        <Button Grid.Row="3" Grid.ColumnSpan="4" Margin="75,5,5,5" Click="Split_OnClick" Foreground="Black">Split</Button>
+        <Button Grid.Row="3" Grid.ColumnSpan="4" Margin="125,5,5,5" Click="Batch_OnClick" Foreground="Black">Batch</Button>
+        <Button Name="Switch" Grid.Row="3" Grid.ColumnSpan="4" Margin="5,5,5,5" Click="Switch_OnClick" Foreground="Black" HorizontalAlignment="Right">Split</Button>
+    </Grid>        
+</Window>
