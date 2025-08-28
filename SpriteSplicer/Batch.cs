@@ -16,6 +16,7 @@ using System.Reflection;
 using SharpCompress;
 using SharpCompress.Archives;
 using SharpCompress.Common;
+using SixLabors.ImageSharp.Drawing.Processing;
 
 namespace SpriteSplicer;
 
@@ -27,7 +28,9 @@ public class Batch
         Directory.CreateDirectory(Path.Combine(Paths.temp, "Uncut"));
         Directory.CreateDirectory(Path.Combine(Paths.temp, "80x80"));
         Directory.CreateDirectory(Path.Combine(Paths.temp, "64x100"));
+        Directory.CreateDirectory(Path.Combine(Paths.temp, "256x128"));
         string uncutpath = Path.Combine(Paths.temp, "Uncut");
+        string extendpath = Path.Combine(Paths.temp, "256x128");
         string outputpath = "";
         var files = await parent.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
         {
@@ -89,6 +92,7 @@ public class Batch
         foreach (string sprite in sprites)
         {
             GenericSplit(sprite);
+            BWSpriteExtend(sprite);
         }
         using var archive = SharpCompress.Archives.Zip.ZipArchive.Create();
         archive.AddAllFromDirectory(Paths.temp);
@@ -183,7 +187,24 @@ public class Batch
         archive.AddAllFromDirectory(Paths.temp);
         archive.SaveTo(outputpath, SharpCompress.Common.CompressionType.Deflate);
     }
-    
+
+    private static async void BWSpriteExtend(string filepath)
+    {
+        using (var inStream = File.OpenRead(filepath))
+        using (Image<Rgb24> largerCanvas = new Image<Rgb24>(256, 128))
+        using (var image = SixLabors.ImageSharp.Image.Load(inStream))
+        {
+            Rgba32 bg = image.CloneAs<Rgba32>()[0, 127];
+            largerCanvas.Mutate<Rgb24>(ctx =>
+            {
+                ctx.Fill(bg, new Rectangle(0, 0, 256, 128));
+                ctx.DrawImage(image.Clone(i => i.Crop(new Rectangle(0, 0, image.Width, image.Height))),
+                    new Point(0, 0), 1f);
+            });
+            largerCanvas.SaveAsPng(Path.Combine(Paths.temp, "256x128", Path.GetFileName(filepath)));
+        }
+    }
+
     private static async void GenericSplit(string filepath)
     {
         using (var inStream = File.OpenRead(filepath))
