@@ -97,6 +97,7 @@ public class Batch
         using var archive = SharpCompress.Archives.Zip.ZipArchive.Create();
         archive.AddAllFromDirectory(Paths.temp);
         archive.SaveTo(outputpath, SharpCompress.Common.CompressionType.Deflate);
+        Directory.Delete(Paths.temp, true);
     }
     public static async void PtSplit(string filepath, Window parent)
     {
@@ -106,16 +107,22 @@ public class Batch
         Directory.CreateDirectory(Path.Combine(Paths.temp, "64x100"));
         string uncutpath = Path.Combine(Paths.temp, "Uncut");
         string outputpath = "";
-        var files = await parent.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+        var files = await parent.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
         {
-            Title = "Select Output Folder",
-            AllowMultiple = false
-        });
-        if (files.Count == 1)
-        {
-            if (!string.IsNullOrWhiteSpace(files[0].Path.LocalPath))
+            Title = "Save Sprites",
+            FileTypeChoices = new List<FilePickerFileType>
             {
-                outputpath = files[0].Path.LocalPath;
+                new FilePickerFileType("ZIP Archive")
+                {
+                    Patterns = new List<string> { "*.zip" }
+                }
+            }
+        });
+        if (files != null)
+        {
+            if (!string.IsNullOrWhiteSpace(files.Path.LocalPath))
+            {
+                outputpath = files.Path.LocalPath;
             }
         }
         int index = 0;
@@ -186,6 +193,7 @@ public class Batch
         using var archive = SharpCompress.Archives.Zip.ZipArchive.Create();
         archive.AddAllFromDirectory(Paths.temp);
         archive.SaveTo(outputpath, SharpCompress.Common.CompressionType.Deflate);
+        Directory.Delete(Paths.temp, true);
     }
 
     private static async void BWSpriteExtend(string filepath)
